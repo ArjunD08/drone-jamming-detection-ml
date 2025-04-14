@@ -1,0 +1,149 @@
+<!-- START OF FILE index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARM // Jamming Dashboard</title>
+    <!-- Link External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Preconnect for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <div class="container">
+        <header>
+           <div class="title"><i class="fas fa-shield-virus"></i> Anti-Jamming Console</div>
+           <div class="team-name">TEAM // ARM</div>
+        </header>
+
+        <main>
+            <!-- === Left Column === -->
+            <div class="main-column-left">
+                <section class="status-grid">
+                    <!-- System Status -->
+                    <div class="status-item status-loading" id="statusCard">
+                        <strong><i class="fas fa-broadcast-tower"></i> System Status</strong>
+                        <span class="value" id="currentStatusValue"><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+                    </div>
+                    <!-- Battery Status -->
+                    <div class="status-item">
+                        <strong><i class="fas fa-battery-half"></i> Battery Level</strong>
+                        <span class="value" id="batteryValue">--- % <i class="fas fa-question-circle"></i></span>
+                    </div>
+                    <!-- Last Event Time -->
+                    <div class="status-item">
+                        <strong><i class="fas fa-clock"></i> Last Event Time</strong>
+                        <span class="value" id="lastDetected">---</span>
+                    </div>
+                </section>
+
+                 <section class="details-suggestions-section">
+                     <!-- GPS Location -->
+                    <div class="detail-item">
+                        <strong><i class="fas fa-map-marker-alt"></i> Last GPS Location</strong>
+                        <span class="value coords" id="gpsLocation">--- , ---</span>
+                    </div>
+                     <!-- RF Channel -->
+                     <div class="detail-item">
+                        <strong><i class="fas fa-wifi"></i> Current RF Channel</strong>
+                        <span class="value" id="currentChannel">---</span>
+                    </div>
+                     <!-- Frequency Suggestion (Shown on Jam) -->
+                     <div class="detail-item" id="freqSuggestion">
+                         <strong><i class="fas fa-lightbulb"></i> Suggested Channel</strong>
+                         <span class="value" id="suggestedChannelValue">---</span>
+                     </div>
+                 </section>
+
+                <section class="history-section">
+                    <h3><i class="fas fa-list-ul"></i> Detection History</h3>
+                    <div id="historyContainer">
+                        <table id="eventHistoryTable">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Status</th>
+                                    <th>Channel</th>
+                                    <th>Location</th> <!-- New Column -->
+                                </tr>
+                            </thead>
+                            <tbody id="eventHistoryBody">
+                                <!-- History rows added by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- === Right Column === -->
+            <div class="main-column-right">
+                 <section class="visuals-section">
+                     <h3><i class="fas fa-chart-line"></i> Live Visuals</h3>
+                     <div class="visuals-grid">
+                        <!-- Signal Strength Graph -->
+                        <div class="graph-container" id="signalGraph">
+                            <div class="graph-title"><i class="fas fa-wave-square"></i> Signal Strength (RSSI)</div>
+                            <div class="graph-area">
+                                <!-- Y-Axis Labels (Static Example) -->
+                                <div class="y-axis-labels">
+                                    <span>-40</span>
+                                    <span>-60</span>
+                                    <span>-80</span>
+                                    <span>-100</span>
+                                </div>
+                                <!-- The actual graph drawing area -->
+                                <div class="graph-content">
+                                    <!-- Sample Signal Line (CSS will draw it) -->
+                                    <div class="signal-line-sample"></div>
+                                    <!-- X-Axis (Implied by container bottom) -->
+                                </div>
+                            </div>
+                            <div class="x-axis-label">Time</div>
+                        </div>
+                         <!-- Flight Path Map -->
+                         <div class="map-placeholder" id="flightMap">
+                             <div><i class="fas fa-map-marked-alt"></i> Flight Path Map Placeholder</div>
+                         </div>
+                     </div>
+                 </section>
+
+                <section class="actions-section">
+                     <div class="action-row">
+                        <label for="actionDropdown"><i class="fas fa-robot"></i> Response Protocol:</label>
+                        <select id="actionDropdown" name="suggestedAction">
+                            <option value="monitor" selected>Standby / Monitoring</option>
+                            <option value="notify">Alert Operator (Notification)</option>
+                            <option value="geofence">Engage Geofence Lockdown</option>
+                            <option value="reassign">Execute Channel Reassignment</option>
+                            <option value="switch_comm">Switch Communication Path</option>
+                            <option value="alarm">Activate Ground Station Alarm</option>
+                            <option value="abort">Initiate RTH / Mission Abort</option>
+                        </select>
+                    </div>
+                    <!-- Counteraction Status -->
+                    <div class="action-row">
+                         <label><i class="fas fa-tasks"></i> Action Status:</label>
+                         <div id="counteractionStatus" class="action-status">
+                            <!-- Status like "Pending", "Executed" appears here -->
+                            No action triggered.
+                         </div>
+                    </div>
+                    <!-- Buttons -->
+                    <div class="action-buttons">
+                         <button id="downloadLogsBtn"><i class="fas fa-download"></i> Download Logs</button>
+                         <button id="overrideBtn"><i class="fas fa-ban"></i> Manual Override</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="dashboard_logic_enhanced.js"></script>
+    <!-- TODO: Add Chart.js / Mapping Library scripts here when implementing -->
+</body>
+</html>
+<!-- END OF FILE index.html -->
